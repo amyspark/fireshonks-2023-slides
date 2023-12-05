@@ -1,0 +1,69 @@
+\ProvidesFile{beamercolorthemefireshonks}[2023/12/05 v1.0 FireShonks Try This At Home]
+
+\ClassWarning{beamercolorthemefireshonks}{FireShonks does not have a public design document}
+
+\definecolor{base1}{HTML}{241b2b}
+\definecolor{baseColor1}{HTML}{ffebd8}
+\definecolor{baseColor2}{HTML}{ea5177}
+\definecolor{baseColor3}{HTML}{fdbe4b}
+\definecolor{baseColor4}{HTML}{62c1a6}
+\definecolor{baseColor5}{HTML}{5253ff}
+\definecolor{baseColor6}{HTML}{a74db7}
+
+\definecolor{light1}{HTML}{DED6E5}
+\definecolor{lightColor1}{HTML}{0e0e0f}
+\definecolor{lightColor2}{HTML}{ea4a72}
+\definecolor{lightColor3}{HTML}{f6b237}
+\definecolor{lightColor4}{HTML}{57c0a2}
+\definecolor{lightColor5}{HTML}{5152e6}
+\definecolor{lightColor6}{HTML}{9945c5}
+
+% \definecolor{officialGradient1}{HTML}{223a33}
+% \definecolor{officialGradient2}{HTML}{0a161f}
+\definecolor{officialPretalxBackground}{HTML}{1D2D49}
+\definecolor{tryThisAtHome}{HTML}{0285c2}
+
+\colorlet{media1}{baseColor1}
+\colorlet{media2}{baseColor4}
+\colorlet{media3}{baseColor5}
+\colorlet{media4}{baseColor6}
+
+\colorlet{wiki1}{baseColor1}
+\colorlet{wiki2}{baseColor2}
+\colorlet{wiki3}{baseColor3}
+\colorlet{wiki4}{baseColor4}
+
+\colorlet{block1}{base1}
+
+% \colorlet{media1}{lightColor1}
+% \colorlet{media2}{lightColor4}
+% \colorlet{media3}{lightColor5}
+% \colorlet{media4}{lightColor6}
+
+% \colorlet{wiki1}{lightColor1}
+% \colorlet{wiki2}{lightColor2}
+% \colorlet{wiki3}{lightColor3}
+% \colorlet{wiki4}{lightColor4}
+
+% \colorlet{block1}{light1}
+
+\mode<presentation>{
+\usecolortheme[named=media3]{structure}
+\usecolortheme{rose}
+}
+
+\mode<beamer>{
+% \pgfdeclareverticalshading{divoc shading}{\the\paperwidth}{color(0cm)=(officialGradient2); color(\the\paperheight)=(officialGradient1)}
+% \setbeamertemplate{background canvas}{\pgfuseshading{divoc shading}}
+\setbeamercolor{background canvas}{bg=tryThisAtHome}
+\beamerdefaultoverlayspecification{<+->}
+\setbeamercolor{normal text}{fg=media1}
+\setbeamercolor{titlelike}{fg=media1}
+% \setbeamercolor{palette primary}{fg=media3}
+% \setbeamercolor{palette secondary}{fg=lightColor1}
+\setbeamercolor{section in toc}{fg=wiki3}
+\setbeamercolor{block body}{fg=block1}
+\setbeamercolor{block body alerted}{fg=block1}
+}
+
+\mode<all>
