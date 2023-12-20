@@ -69,8 +69,8 @@
 }
 \setbeamertemplate{frametitle continuation}{(\insertcontinuationcountroman)}
 
-\setmainfont[Ligatures={Common, TeX}, Scale=1]{TeX Gyre Termes}
-\setsansfont[Scale=1]{Fira Sans}
+\setmainfont[Ligatures={Common, TeX}]{TeX Gyre Termes}
+\setsansfont[Scale=MatchUppercase]{Fira Sans}
 \setmonofont[Scale=MatchUppercase]{Source Code Pro}
 
 \setbeamerfont{caption}{size=\footnotesize}

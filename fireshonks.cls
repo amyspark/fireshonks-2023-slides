@@ -12,8 +12,8 @@
 % FUENTES
 %%%%%%%%%%%%%%%%%%%%%
 
-\setmainfont[Scale=1]{Atkinson Hyperlegible}
-\setsansfont[Scale=1.75]{Jolly Lodger}
+\setmainfont{Atkinson Hyperlegible}
+\setsansfont[Scale=1.5]{Jolly Lodger}
 \setmonofont[Scale=MatchUppercase]{Cascadia Code}
 \setmathfont{TeX Gyre Schola Math}
 
