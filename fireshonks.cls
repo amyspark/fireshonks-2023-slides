@@ -33,7 +33,7 @@
     \begin{tikzpicture}[outer sep=0pt, inner sep=0pt]
       {
         [local bounding box=title]
-        \node[anchor=north west, align=flush left] at (current page.north west) [text width=\dimexpr\paperwidth-2\metropolis@frametitle@padding\relax, minimum height=2\baselineskip] {\insertframetitle};
+        \node[anchor=north west, align=flush left] at (current page.north west) [text width=\dimexpr\paperwidth-2\metropolis@frametitle@padding\relax, minimum height=1.2\baselineskip] {\insertframetitle};
       }
     % \begin{pgfinterruptboundingbox}
     % \scoped[on background layer]\node[semitransparent, anchor=north east, yshift=-.5\metropolis@frametitle@padding, xshift=.5\metropolis@frametitle@padding] at (title.north east) {\includegraphics[height=3em,keepaspectratio]{frontmatter/header-240pxwu_D06meXe_4Jkp093}};
