@@ -50,77 +50,18 @@
 
 \begin{frame}{About me}
   \begin{itemize}[<*>]
+    \item Upstreamer \& Compiler Breaker at Centricular
+      \begin{itemize}[<*>]
+        \item Fine purveyors of Free and Open Source Software consulting
+      \end{itemize}
     \item Colour spaces, SIMD, build systems... curses are my specialty \emoji{woman-mage}
-    \item Currently working with the fine GStreamer folks @ Centricularw
     \item Occasional contributor to a lot of projects
-    \item \href{https://www.amyspark.me}{amyspark.me}
   \end{itemize}
 \end{frame}
 \begin{frame}{Scope}
   \tableofcontents
 \end{frame}
-\section{Motivation}
-\begin{frame}{Motivation}
-  \begin{center}
-    \Large
-    \only<1|handout:0>{\emoji{woman-raising-hand} But wait a minute... what's \emph{YCbCr}?}
-    \only<2|handout:0>{\emoji{woman-raising-hand} But wait a minute... what's \emph{a colour space}?}
-    \only<3|handout:0>{\emoji{woman-raising-hand} But wait a minute... what's \emph{an ICC profile}?}
-    \only<4->{\emoji{woman-raising-hand} But wait a minute... what's \emph{*confusing term here*}?}
-  \end{center}
-  \uncover<5->{
-    \begin{center}That's what we are here for today!\end{center}
-  }
-\end{frame}
-\begin{frame}{Scope}
-  \tableofcontents
-\end{frame}
-\section{Colour management}
-\begin{frame}{What is \enquote{colour management}?}
-  \begin{definition}
-    \enquote{The use of hardware, software, and processes to control and adjust colour among different devices in a (digital) imaging system} \autocite{sharma}
-  \end{definition}
-
-  \begin{enumerate}
-    \item Why do we need colour management?
-    \item How are devices colour managed?
-    \item How are colours specified?
-  \end{enumerate}
-\end{frame}
-\begin{frame}{Why do we need colour management?}
-  \begin{center}
-    \emph{Device-independent colour translation}
-  \end{center}
-
-  \begin{itemize}[<+(1)->]
-    \item \emoji{thinking} I can haz \colorbox{baseColor3}{\phantom{AKI}} on my screen \textbf{and} in a print?
-    \item Each device measures colour in a different way
-    \item Formally, given a scene, colour management produces almost identical \autocite{allen}:
-          \begin{itemize}
-            \item representations from different input devices
-            \item representations on different output devices
-          \end{itemize}
-  \end{itemize}
-\end{frame}
-\begin{frame}{How are devices colour managed?}
-  \enquote{Three Cs} of colour management \autocite{sharma}:
-  \begin{itemize}[<+(1)->]
-    \item \emph{Calibration}
-          \begin{itemize}
-            \item set the device up to a known, desired, and \emph{repeatable} state
-          \end{itemize}
-    \item \emph{Characterization}
-          \begin{itemize}
-            \item measurement of the response of said device to colour inputs
-            \item description in a device-independent manner
-            \item this is stored in a \emph{device profile} (and usually embedded in the images it outputs)
-          \end{itemize}
-    \item \emph{Conversion}
-          \begin{itemize}
-            \item convert the image between source and destination devices
-          \end{itemize}
-  \end{itemize}
-\end{frame}
+\section{Introduction}
 \begin{frame}{How are colours specified?}
   Colours are specified as coordinates in a \emph{colour space}.
   \begin{itemize}[<+(1)->]
@@ -235,435 +176,6 @@
           \end{itemize}
   \end{enumerate}
 \end{frame}
-\begin{frame}{Processing the colour values}
-  ICC profiles can process colours in two ways, according to the latest spec (v4.3, \cite*{icc}).
-  \begin{itemize}[<+(1)->]
-    \item Matrix + TRC
-    \item Color look-up tables
-  \end{itemize}
-\end{frame}
-\begin{frame}{Matrix/TRC}
-  \begin{itemize}
-    \item Combines a $3\times3$ matrix and \emph{tone reproduction curves}
-          (gamma/OETF)
-    \item Can convert only RGB or greyscale
-    \item \textbf{Not stored directly}
-    \item One TRC for each channel
-    \item Coordinates of the 3 primaries $\rightarrow$ 3x3 matrix
-  \end{itemize}
-\end{frame}
-\begin{frame}{Matrix/TRC}
-  This is the flow of a device colour space to PCS conversion:
-  \begin{figure}
-    \begin{tikzpicture}[
-        stage/.style={column sep=0pt, inner xsep=0pt, anchor=center, left delimiter=\lbrack, right delimiter=\rbrack},
-        trc/.style={row sep=5pt, column sep=0pt, nodes={font=\LARGE, anchor=center, draw}},
-        stage label/.style={inner sep=0pt, anchor=mid},
-        transform/.style={->,shorten >=1pt,>=Latex,semithick},
-        clut/.style={regular polygon, regular polygon sides=4, inner sep=-0.5em, anchor=center, draw}
-      ]
-      \matrix [stage, matrix anchor=a2.center] (A) {
-        \node (a1) {Channel 1}; \\
-        \node (a2) {Channel 2}; \\
-        \node (a3) {Channel 3}; \\
-      };
-      \node [stage label, above=4em of A.center] (l1) {Device space};
-      \node [right=1mm of a1.east] (c1) {};
-      \node [right=1mm of a2.east] (c2) {};
-      \node [right=1mm of a3.east] (c3) {};
-
-      \matrix [trc, right=5em of A.east, matrix anchor=trc2.west] (trc) {
-        \node (trc1) {\faChartLine}; \\
-        \node (trc2) {\faChartLine}; \\
-        \node (trc3) {\faChartLine}; \\
-      };
-
-      \node [clut, right=7em of trc, anchor=west] (M) {$\text{Matrix}_{3 \times 3}$};
-
-      \matrix [stage, right=5em of M, matrix anchor=b2.center] (b) {
-        \node (b1) {X}; \\
-        \node (b2) {Y}; \\
-        \node (b3) {Z}; \\
-      };
-      \node [left=1mm of b1.west] (x) {};
-      \node [left=1mm of b2.west] (y) {};
-      \node [left=1mm of b3.west] (z) {};
-
-      \path (l1.east) -| (trc.center) node [midway] (l2x) {};
-      \node [stage label] at (l2x) {\enquote{B} curves};
-
-      \path (l1.east) -| (b.center) node [midway] (l3x) {};
-      \node [stage label] at (l3x) {PCS};
-
-      \draw [transform] (c1) -- ++(2em,0em) |- (trc1.west);
-      \draw [transform] (c2) -- ++(2em,0em) |- (trc2.west);
-      \draw [transform] (c3) -- ++(2em,0em) |- (trc3.west);
-
-      \path (M.west) |- (x) node [midway] (m1) {};
-      \path (M.west) |- (y) node [midway] (m2) {};
-      \path (M.west) |- (z) node [midway] (m3) {};
-
-      \draw [transform] (trc1.east) node[above right] {TRC$_{1}$} -- ++(3.5em,0em) |- (m1);
-      \draw [transform] (trc2.east) node[above right] {TRC$_{2}$} -- ++(3.5em,0em) |- (m2);
-      \draw [transform] (trc3.east) node [above right] {TRC$_{3}$} -- ++(3.5em,0em) |- (m3) ;
-
-      \path (M.east) |- (x) node [midway] (m4){};
-      \path (M.east) |- (y) node [midway] (m5){};
-      \path (M.east) |- (z) node [midway] (m6){};
-
-      \draw [transform] (m4) -- ++(1.5em,0em) |- (x);
-      \draw [transform] (m5) -- ++(1.5em,0em) |- (y);
-      \draw [transform] (m6) -- ++(1.5em,0em) |- (z);
-    \end{tikzpicture}
-    \caption*{Adapted from \textcite[xi]{icc}}
-  \end{figure}
-\end{frame}
-\begin{frame}{Matrix/TRC}
-  To go from the PCS to the device colour space, the matrix and curves are inverted.
-
-  The calculations are done by the CMM, no extra effort is needed.
-
-  \begin{figure}
-    \begin{tikzpicture}[
-        stage/.style={column sep=0pt, inner xsep=0pt, anchor=center, left delimiter=\lbrack, right delimiter=\rbrack},
-        trc/.style={row sep=5pt, column sep=0pt, nodes={font=\LARGE, anchor=center, draw}},
-        stage label/.style={inner sep=0pt, anchor=mid},
-        transform/.style={->,shorten >=1pt,>=Latex,semithick},
-        clut/.style={regular polygon, regular polygon sides=4, inner sep=-0.5em, anchor=center, draw}
-      ]
-      \matrix [stage, matrix anchor=b2.center] (b) {
-        \node (b1) {X}; \\
-        \node (b2) {Y}; \\
-        \node (b3) {Z}; \\
-      };
-      \node [right=1mm of b1.east] (x) {};
-      \node [right=1mm of b2.east] (y) {};
-      \node [right=1mm of b3.east] (z) {};
-
-      \node [clut, right=5em of b] (M) {Matrix$_{3 \times 3}^{-1}$};
-
-      \matrix [trc, right=5em of M.east, matrix anchor=trc2.west] (trc) {
-        \node (trc1) {\faChartLine}; \\
-        \node (trc2) {\faChartLine}; \\
-        \node (trc3) {\faChartLine}; \\
-      };
-
-      \matrix [stage, matrix anchor=a2.west, right=7em of trc] (A) {
-        \node (a1) {Channel 1}; \\
-        \node (a2) {Channel 2}; \\
-        \node (a3) {Channel 3}; \\
-      };
-      \node [stage label, above=4em of A.center] (l1) {Device space};
-      \node [left=1mm of a1.west] (c1) {};
-      \node [left=1mm of a2.west] (c2) {};
-      \node [left=1mm of a3.west] (c3) {};
-
-      \path (l1.west) -| (trc.center) node [midway] (l2x) {};
-      \node [stage label] at (l2x) {\enquote{B} curves};
-
-      \path (l1.west) -| (b.center) node [midway] (l3x) {};
-      \node [stage label] at (l3x) {PCS};
-
-      \draw [transform] (trc1.east)  node[above right] {TRC$_{1}^{-1}$} -- ++(3.5em,0em) |- (c1);
-      \draw [transform] (trc2.east) node[above right] {TRC$_{2}^{-1}$} -- ++(3.5em,0em) |- (c2);
-      \draw [transform] (trc3.east) node [above right] {TRC$_{3}^{-1}$} -- ++(3.5em,0em) |- (c3);
-
-      \path (M.east) |- (x) node [midway] (m1) {};
-      \path (M.east) |- (y) node [midway] (m2) {};
-      \path (M.east) |- (z) node [midway] (m3) {};
-
-      \draw [transform] (m1) -- ++(3em,0em) |- (trc1.west);
-      \draw [transform] (m2) -- ++(3em,0em) |- (trc2.west);
-      \draw [transform] (m3) -- ++(3em,0em) |- (trc3.west) ;
-
-      \path (M.west) |- (x) node [midway] (m4){};
-      \path (M.west) |- (y) node [midway] (m5){};
-      \path (M.west) |- (z) node [midway] (m6){};
-
-      \draw [transform] (x) -- ++(1.5em,0em) |- (m4);
-      \draw [transform] (y) -- ++(1.5em,0em) |- (m5);
-      \draw [transform] (z) -- ++(1.5em,0em) |- (m6);
-    \end{tikzpicture}
-    \caption*{Adapted from \textcite[x]{icc}}
-  \end{figure}
-\end{frame}
-\begin{frame}{n-component color look-up tables}
-  \begin{itemize}
-    \item $n$-channel colour spaces e.g. CMYK
-    \item Alternatively, more complex colour conversions
-    \item Each transform direction is \emph{explicitly} stored in separate \emph{tags}
-    \item The standard version (required): 8 or 16-bit unsigned integer depth
-          \begin{itemize}
-            \item \emph{AtoB0} (to PCS) and \emph{BtoA0} (from PCS) tags
-          \end{itemize}
-    \item Alternative: floating-point depth
-          \begin{itemize}
-            \item \emph{DtoB0} (to PCS) and \emph{BtoD0} (from PCS) tags
-            \item Overrides the former if specified (and the CMM supports it)
-          \end{itemize}
-  \end{itemize}
-\end{frame}
-\begin{frame}{n-component color look-up tables}
-  \begin{itemize}
-    \item \emph{AtoB0} and \emph{BtoA0} are \emph{colour transform} structures
-    \item Up to 5 elements, 4 possible ways to use them
-    \item Device $\rightarrow$ PCS:
-          \begin{enumerate}
-            \item B
-            \item M-Matrix-B (explicit matrix/TRC)
-            \item A-CLUT-B
-            \item A-CLUT-M-Matrix-B (the most expressive, also the heaviest storage-wise)
-          \end{enumerate}
-    \item PCS $\rightarrow$ device: reverse the direction
-    \item Note: Matrix has a fourth \emph{offset} column (unlike matrix/TRC)
-  \end{itemize}
-\end{frame}
-\begin{frame}{n-component color look-up tables}
-  Device $\rightarrow$ PCS transform:
-
-  \begin{figure}
-    \footnotesize
-    \begin{tikzpicture}[
-        stage/.style={inner xsep=0pt, column sep=5pt, anchor=center, left delimiter=\lbrack, right delimiter=\rbrack, matrix anchor=west},
-        trc/.style={row sep=5pt, column sep=0pt, matrix anchor=west, nodes={font=\large, anchor=center, align=center, minimum width=2em}},
-        stage label/.style={inner sep=0pt, anchor=mid},
-        transform/.style={->,shorten >=1pt,>=Latex,semithick},
-        clut/.style={regular polygon, regular polygon sides=4, anchor=west, minimum size=9em, inner sep=0pt, draw}
-      ]
-      \matrix [stage] (S) {
-        \node (s1) {Channel 1};    \\
-        \node (s2) {Channel 2};    \\
-        \node (s3) {\faEllipsisV}; \\
-        \node (sn) {Channel n};    \\
-      };
-      \node [stage label, above=5em of S.center] (l1) {Device space};
-      \node [right=.05em of s1.east] (c1) {};
-      \node [right=.05em of s2.east] (c2) {};
-      \path (c2) |- (s3) node [midway] (c3) {};
-      \node [right=.05em of sn.east] (cn) {};
-
-      \matrix [trc, right=2.5em of S.east] (A) {
-        \node [draw] (a1) {\faChartLine}; \\
-        \node [draw] (a2) {\faChartLine}; \\
-        \node (a3) {\faEllipsisV};        \\
-        \node [draw] (an) {\faChartLine}; \\
-      };
-
-      \node [clut, right=2em of A.east] (CLUT) { CLUT };
-
-      \matrix [trc, right=2em of CLUT.east] (M) {
-        \node [draw] (M1) {\faChartLine}; \\
-        \node [draw] (M2) {\faChartLine}; \\
-        \node [draw] (M3) {\faChartLine}; \\
-      };
-
-      \node [clut, right=2em of M.east] (Matrix) {$\text{Matrix}_{3 \times 4}$};
-
-      \matrix [trc, right=2em of Matrix.east] (B) {
-        \node [draw] (b1) {\faChartLine}; \\
-        \node [draw] (b2) {\faChartLine}; \\
-        \node [draw] (b3) {\faChartLine}; \\
-      };
-
-      \matrix [stage, right=2.5em of B.east, ampersand replacement=\&] (PCS) {
-        \node (pcs1) {X}; \& \& \node (pcs4) {$\text{L}*$};             \\
-        \node (pcs2) {Y}; \& \node {or}; \& \node (pcs5) {$\text{a}*$}; \\
-        \node (pcs3) {Z}; \& \& \node (pcs6) {$\text{b}*$};             \\
-      };
-      \node [left=.05em of pcs1.west] (x) {};
-      \node [left=.05em of pcs2.west] (y) {};
-      \node [left=.05em of pcs3.west] (z) {};
-
-      \path (l1.east) -| (A.center) node [midway] (l2x) {};
-      \node [stage label] at (l2x) {\enquote{A} curves};
-
-      \path (l1.east) -| (CLUT.center) node [midway] (l3x) {};
-      \node [stage label, align=center] at (l3x) {Multi-dimensional \\ look-up table};
-
-      \path (l1.east) -| (M.center) node [midway] (l4x) {};
-      \node [stage label] at (l4x) {\enquote{M} curves};
-
-      \path (l1.east) -| (B.center) node [midway] (l5x) {};
-      \node [stage label] at (l5x) {\enquote{B} curves};
-
-      \path (l1.east) -| (PCS.center) node [midway] (l6x) {};
-      \node [stage label] at (l6x) {PCS};
-
-      \draw [transform] (c1.east) -- ++(1em,0em) |- (a1.west);
-      \draw [transform] (c2.east) -- ++(1em,0em) |- (a2.west);
-      \draw [transform] (c3.east) -- ++(1em,0em) |- (a3.west);
-      \draw [transform] (cn.east) -- ++(1em,0em) |- (an.west);
-
-      \path (CLUT.west) |- (s1.east) node [midway] (m1) {};
-      \path (CLUT.west) |- (s2.east) node [midway] (m2) {};
-      \path (CLUT.west) |- (s3.east) node [midway] (m3) {};
-      \path (CLUT.west) |- (sn.east) node [midway] (m4) {};
-
-      \draw [transform] (a1.east) -- ++(1em,0em) |- (m1.center);
-      \draw [transform] (a2.east) -- ++(1em,0em) |- (m2.center);
-      \draw [transform] (a3.east) -- ++(1em,0em) |- (m3.center);
-      \draw [transform] (an.east) -- ++(1em,0em) |- (m4.center) ;
-
-      \path (CLUT.east) |- (x) node [midway] (m5) {};
-      \path (CLUT.east) |- (y) node [midway] (m6) {};
-      \path (CLUT.east) |- (z) node [midway] (m7) {};
-
-      \draw [transform] (m5.center) -- ++(1em,0em) |- (M1.west);
-      \draw [transform] (m6.center) -- (M2.west);
-      \draw [transform] (m7.center) -- ++(1em,0em) |- (M3.west);
-
-      \path (Matrix.west) |- (x) node [midway] (Matrix1) {};
-      \path (Matrix.west) |- (z) node [midway] (Matrix3) {};
-
-      \draw [transform] (M1.east) -- ++(1em,0em) |- (Matrix1.center);
-      \draw [transform] (M2.east) -- (Matrix.west);
-      \draw [transform] (M3.east) -- ++(1em,0em) |- (Matrix3.center);
-
-      \path (Matrix.east) |- (x) node [midway] (Matrix4) {};
-      \path (Matrix.east) |- (y) node [midway] (Matrix5) {};
-      \path (Matrix.east) |- (z) node [midway] (Matrix6) {};
-
-      \draw [transform] (Matrix4.center) -- ++(1em,0em) |- (b1.west);
-      \draw [transform] (Matrix5.center) -- (b2.west);
-      \draw [transform] (Matrix6.center) -- ++(1em,0em) |- (b3.west);
-
-      \draw [transform] (b1.east) -- ++(1em,0em) |- (x.center);
-      \draw [transform] (b2.east) -- (y.center);
-      \draw [transform] (b3.east) -- ++(1em,0em) |- (z.center);
-    \end{tikzpicture}
-
-    \caption*{Source: \textcite[xii]{icc}}
-  \end{figure}
-\end{frame}
-\begin{frame}{n-component color look-up tables}
-  PCS $\rightarrow$ device transform:
-
-  \begin{figure}
-    \footnotesize
-    \begin{tikzpicture}[
-        stage/.style={inner xsep=0pt, column sep=5pt, left delimiter=\lbrack, right delimiter=\rbrack, matrix anchor=west, nodes={anchor=center, align=center}},
-        trc/.style={row sep=5pt, column sep=0pt, matrix anchor=west, nodes={font=\large, anchor=center, align=center, minimum width=2em}},
-        stage label/.style={inner sep=0pt, anchor=mid},
-        transform/.style={->,shorten >=1pt,>=Latex,semithick},
-        clut/.style={regular polygon, regular polygon sides=4, anchor=west, minimum size=9em, inner sep=0pt, draw}
-      ]
-      \matrix [stage, ampersand replacement=\&] (PCS) {
-        \node (pcs1) {X}; \& \& \node (pcs4) {$\text{L}*$};             \\
-        \node (pcs2) {Y}; \& \node {or}; \& \node (pcs5) {$\text{a}*$}; \\
-        \node (pcs3) {Z}; \& \& \node (pcs6) {$\text{b}*$};             \\
-      };
-      \node [right=.05em of PCS.east] (y) {};
-      \path (y) |- (pcs4) node [midway] (x) {};
-      \path (y) |- (pcs6) node [midway] (z) {};
-
-      \matrix [trc, right=2.5em of PCS.east] (B) {
-        \node [draw] (b1) {\faChartLine}; \\
-        \node [draw] (b2) {\faChartLine}; \\
-        \node [draw] (b3) {\faChartLine}; \\
-      };
-
-      \node [clut, right=2em of B.east] (Matrix) {$\text{Matrix}_{3 \times 4}$};
-
-      \matrix [trc, right=2em of Matrix.east] (M) {
-        \node [draw] (M1) {\faChartLine}; \\
-        \node [draw] (M2) {\faChartLine}; \\
-        \node [draw] (M3) {\faChartLine}; \\
-      };
-
-      \node [clut, right=2em of M.east] (CLUT) { CLUT };
-
-      \matrix [trc, right=2em of CLUT.east] (A) {
-        \node [draw] (a1) {\faChartLine}; \\
-        \node [draw] (a2) {\faChartLine}; \\
-        \node (a3) {\faEllipsisV};        \\
-        \node [draw] (an) {\faChartLine}; \\
-      };
-
-      \matrix [stage, right=2.5em of A.east] (S) {
-        \node (s1) {Channel 1};    \\
-        \node (s2) {Channel 2};    \\
-        \node (s3) {\faEllipsisV}; \\
-        \node (sn) {Channel n};    \\
-      };
-      \node [stage label, above=5em of S.center] (l1) {Device space};
-      \node [left=.05em of s1.west] (c1) {};
-      \path (c1) |- (s2) node [midway] (c2) {};
-      \path (c2) |- (s3) node [midway] (c3) {};
-      \path (c3) |- (sn) node [midway] (cn) {};
-
-      \path (l1.east) -| (A.center) node [midway] (l2x) {};
-      \node [stage label] at (l2x) {\enquote{A} curves};
-
-      \path (l1.east) -| (CLUT.center) node [midway] (l3x) {};
-      \node [stage label, align=center] at (l3x) {Multi-dimensional \\ look-up table};
-
-      \path (l1.east) -| (M.center) node [midway] (l4x) {};
-      \node [stage label] at (l4x) {\enquote{M} curves};
-
-      \path (l1.east) -| (B.center) node [midway] (l5x) {};
-      \node [stage label] at (l5x) {\enquote{B} curves};
-
-      \path (l1.east) -| (PCS.center) node [midway] (l6x) {};
-      \node [stage label] at (l6x) {PCS};
-
-      \draw [transform] (a1.east) -- ++(1em,0em) |- (c1.west);
-      \draw [transform] (a2.east) -- ++(1em,0em) |- (c2.west);
-      \draw [transform] (a3.east) -- ++(1em,0em) |- (c3.west);
-      \draw [transform] (an.east) -- ++(1em,0em) |- (cn.west);
-
-      \path (CLUT.east) |- (s1.west) node [midway] (m1) {};
-      \path (CLUT.east) |- (s2.west) node [midway] (m2) {};
-      \path (CLUT.east) |- (s3.west) node [midway] (m3) {};
-      \path (CLUT.east) |- (sn.west) node [midway] (m4) {};
-
-      \draw [transform] (m1.center) -- ++(1em,0em) |- (a1.west);
-      \draw [transform] (m2.center) -- ++(1em,0em) |- (a2.west);
-      \draw [transform] (m3.center) -- ++(1em,0em) |- (a3.west);
-      \draw [transform] (m4.center) -- ++(1em,0em) |- (an.west);
-
-      \path (CLUT.west) |- (x) node [midway] (m5) {};
-      \path (CLUT.west) |- (y) node [midway] (m6) {};
-      \path (CLUT.west) |- (z) node [midway] (m7) {};
-
-      \draw [transform] (M1.east) -- ++(1em,0em) |- (m5.center);
-      \draw [transform] (M2.east) -- (m6.center);
-      \draw [transform] (M3.east) -- ++(1em,0em) |- (m7.center);
-
-      \path (Matrix.east) |- (x) node [midway] (Matrix1) {};
-      \path (Matrix.east) |- (z) node [midway] (Matrix3) {};
-
-      \draw [transform] (Matrix1.center) -- ++(1em,0em) |- (M1.west);
-      \draw [transform] (Matrix.east) -- (M2.west);
-      \draw [transform] (Matrix3.center) -- ++(1em,0em) |- (M3.west);
-
-      \path (Matrix.west) |- (x) node [midway] (Matrix4) {};
-      \path (Matrix.west) |- (y) node [midway] (Matrix5) {};
-      \path (Matrix.west) |- (z) node [midway] (Matrix6) {};
-
-      \draw [transform] (b1.east) -- ++(1em,0em) |- (Matrix4.center);
-      \draw [transform] (b2.east) -- (Matrix5.center);
-      \draw [transform] (b3.east) -- ++(1em,0em) |- (Matrix6.center);
-
-      \draw [transform] (x.east) -- ++(1em,0em) |- (b1.west);
-      \draw [transform] (y.east) -- (b2.west);
-      \draw [transform] (z.east) -- ++(1em,0em) |- (b3.west);
-    \end{tikzpicture}
-
-    \caption*{Source: \textcite[xi]{icc}}
-  \end{figure}
-\end{frame}
-\begin{frame}{n-component color look-up tables}
-  \begin{itemize}
-    \item \emph{DtoB0} and \emph{BtoD0} are floating-point \emph{colour transforms}
-    \item Any component, as many times and in any order as needed
-          \begin{itemize}
-            \item Matrices, TRCs (parametric or sampled), CLUTs
-          \end{itemize}
-    \item Viewers like Apple's ColorSync viewer don't support them
-    \item Supported parametric TRC types are \emph{far} less
-    \item We'll see why this is important in the last section
-  \end{itemize}
-\end{frame}
 \begin{frame}{Illuminants}
   \begin{itemize}
     \item ICC profiles are expected to represent all colours under a fixed source of illumination
@@ -716,7 +228,7 @@
       \caption*{Adapted from \textcite[35]{icc}}
     \end{figure}}
 \end{frame}
-\section{Colour spaces}
+\section{What are these spaces for?}
 
 \begin{frame}{What is YCbCr?}
   \begin{center}
@@ -733,6 +245,7 @@
           \end{itemize}
   \end{itemize}
 \end{frame}
+\section{Examples}
 \begin{frame}{Reasoning}
   \begin{center}
     Digital encoding of colour signals for TV
@@ -754,6 +267,33 @@
             \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
           \end{itemize}
   \end{enumerate}
+\end{frame}
+\begin{frame}{YIQ}
+  \begin{columns}<.->
+    \begin{column}<.->{.7\textwidth}
+      \begin{itemize}
+        \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
+        \item $Y$ is the \emph{luminance} signal
+              \begin{itemize}
+                \item Intuitively, our eyes are most sensitive to $G$
+                \item $G$ is a major contributor to the luminance value
+                \item $R$ and $B$ have smaller contributions
+              \end{itemize}
+        \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
+              \begin{itemize}
+                \item complementary \emph{colour difference} signals
+                \item $Cb$ blue - luma, $Cr$ red - luma
+              \end{itemize}
+        \item Standardized by the ITU in two Recommendations
+      \end{itemize}
+    \end{column}
+    \begin{column}<1->{.3\textwidth}
+      \begin{figure}
+        \includegraphics[height=10\baselineskip,keepaspectratio]{figures/YIQ_components.jpg}
+        \caption*{Source: \href{https://commons.wikimedia.org/wiki/File:YIQ_components.jpg}{(3ucky(3all}, CC-BY-SA 3.0, via Wikimedia Commons}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 \begin{frame}{What does YCbCr do?}
   \begin{columns}<.->
@@ -854,6 +394,89 @@
     \item $\gamma$ depends on the device
     \item The official recommendation, ITU-R BT.1886 \parencite*{BT1886} defaults to $\gamma = 2.4$
   \end{itemize}
+\end{frame}
+
+\begin{frame}{YDbDr}
+  \begin{columns}<.->
+    \begin{column}<.->{.7\textwidth}
+      \begin{itemize}
+        \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
+        \item $Y$ is the \emph{luminance} signal
+              \begin{itemize}
+                \item Intuitively, our eyes are most sensitive to $G$
+                \item $G$ is a major contributor to the luminance value
+                \item $R$ and $B$ have smaller contributions
+              \end{itemize}
+        \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
+              \begin{itemize}
+                \item complementary \emph{colour difference} signals
+                \item $Cb$ blue - luma, $Cr$ red - luma
+              \end{itemize}
+        \item Standardized by the ITU in two Recommendations
+      \end{itemize}
+    \end{column}
+    \begin{column}<1->{.3\textwidth}
+      \begin{figure}
+        \includegraphics[height=10\baselineskip,keepaspectratio]{figures/YDbDr_components.jpg}
+        \caption*{Source: \href{https://commons.wikimedia.org/wiki/File:YDbDr_components.jpg}{(3ucky(3all}, CC-BY-SA 3.0, via Wikimedia Commons}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+\begin{frame}{YCgCo}
+  \begin{columns}<.->
+    \begin{column}<.->{.7\textwidth}
+      \begin{itemize}
+        \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
+        \item $Y$ is the \emph{luminance} signal
+              \begin{itemize}
+                \item Intuitively, our eyes are most sensitive to $G$
+                \item $G$ is a major contributor to the luminance value
+                \item $R$ and $B$ have smaller contributions
+              \end{itemize}
+        \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
+              \begin{itemize}
+                \item complementary \emph{colour difference} signals
+                \item $Cb$ blue - luma, $Cr$ red - luma
+              \end{itemize}
+        \item Standardized by the ITU in two Recommendations
+      \end{itemize}
+    \end{column}
+    \begin{column}<1->{.3\textwidth}
+      \begin{figure}
+        \includegraphics[height=10\baselineskip,keepaspectratio]{figures/Barns_grand_tetons_YCgCo_separation.jpg}
+        \caption*{Source: \href{https://commons.wikimedia.org/wiki/File:Barns_grand_tetons_YCgCo_separation.jpg}{Devcore}, Public Domain, via Wikimedia Commons}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{ICtCp}
+  \begin{columns}<.->
+    \begin{column}<.->{.7\textwidth}
+      \begin{itemize}
+        \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
+        \item $Y$ is the \emph{luminance} signal
+              \begin{itemize}
+                \item Intuitively, our eyes are most sensitive to $G$
+                \item $G$ is a major contributor to the luminance value
+                \item $R$ and $B$ have smaller contributions
+              \end{itemize}
+        \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
+              \begin{itemize}
+                \item complementary \emph{colour difference} signals
+                \item $Cb$ blue - luma, $Cr$ red - luma
+              \end{itemize}
+        \item Standardized by the ITU in two Recommendations
+      \end{itemize}
+    \end{column}
+    \begin{column}<1->{.3\textwidth}
+      \begin{figure}
+        \includegraphics[height=10\baselineskip,keepaspectratio]{figures/ICtCp_components.jpg}
+        \caption*{Source: based on \href{https://commons.wikimedia.org/wiki/File:Barns_grand_tetons.jpg}{Jon Sullivan (PD Photo.org)}, Public Domain, via Wikimedia Commons}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 \section{Conclusions}
 \begin{frame}{Remarks}
