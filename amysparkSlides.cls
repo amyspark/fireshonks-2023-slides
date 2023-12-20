@@ -8,7 +8,6 @@
 \fi
 
 %%% CARGA DE PAQUETES Y OPCIONES DE FORMATO %%%
-\PassOptionsToClass{usepdftitle=false}{beamer}
 
 % -------------------------------------------------------------------
 % COLORES Y ENLACES DE HIPERTEXTO.

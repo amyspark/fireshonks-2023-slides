@@ -1,5 +1,5 @@
 % !TEX engine = lualatex
-\documentclass[aspectratio=169]{fireshonks}
+\documentclass[aspectratio=169,handout]{fireshonks}
 
 %%%%%%%%%%%%%%%%%%%%%
 % PAQUETES
@@ -24,6 +24,7 @@
 % TEMPLATE
 %%%%%%%%%%%%%%%%%%%%%
 % Title graphics: BG + logo of the conference
+\mode<beamer>{
 \titlegraphic{
   \begin{tikzpicture}[remember picture, overlay]
     \scoped[on background layer]\node [centered,opacity=0.4] at (current page.center) {\includegraphics[width=\pagewidth,height=\pageheight,keepaspectratio]{frontmatter/cropped-Try_This_At_Home-1920x1080-1.png}};
@@ -33,6 +34,7 @@
       Seal: \href{https://lethalbit.net}{Aki Van Ness}, CC-BY-SA-4.0
     };
   \end{tikzpicture}
+}
 }
 
 %%%%%%%%%%%%%%%%%%
