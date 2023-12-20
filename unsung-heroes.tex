@@ -1,5 +1,5 @@
 % !TEX engine = lualatex
-\documentclass[aspectratio=169,handout]{fireshonks}
+\documentclass[aspectratio=169,handout,usepdftitle=false]{fireshonks}
 
 %%%%%%%%%%%%%%%%%%%%%
 % PAQUETES
@@ -230,9 +230,16 @@
         Interested? Watch my talk at DiVOC!
 
         \qrcode[hyperlink,height=4\baselineskip]{https://media.ccc.de/v/divoc_bb3-48292-the-last-frontier-on-icc-profiles}
+
+        \url{https://media.ccc.de/v/divoc_bb3-48292-the-last-frontier-on-icc-profiles}
     \end{center}
 \end{frame}
 \section{What are these spaces for?}
+\begin{frame}{}
+
+    
+
+\end{frame}
 
 \begin{frame}{What is YCbCr?}
     \begin{center}
@@ -519,4 +526,8 @@
         \end{itemize}
     \end{center}
 \end{frame}
+% https://tex.stackexchange.com/questions/30461/beamer-nonumber-equivalent-for-slides
+\begin{frame}[plain,noframenumbering,allowframebreaks]{\bibname}
+    \printbibliography[heading=none]
+    \end{frame}
 \end{document}

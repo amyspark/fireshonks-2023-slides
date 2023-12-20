@@ -147,19 +147,6 @@
   {\href{\oaitourl#1}{\nolinkurl{#1}}}
   {\nolinkurl{#1}}}
 
-% -------------------------------------------------------------------
-% CARGA DE ENTORNOS.
-% -------------------------------------------------------------------
-
-\DeclareOption{final}{
-  \AtEndEnvironment{document}{
-    % https://tex.stackexchange.com/questions/30461/beamer-nonumber-equivalent-for-slides
-    \begin{frame}[plain,noframenumbering,allowframebreaks]{\bibname}
-      \printbibliography[heading=none]
-    \end{frame}
-  }
-}
-
 \ProcessOptions\relax
 
 %%% FIN CARGA DE PAQUETES Y OPCIONES DE FORMATO %%%
