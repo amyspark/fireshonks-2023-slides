@@ -149,10 +149,10 @@
 \begin{frame}{Example: the sRGB colour space}
     \emph{sRGB} ("standard RGB") powers most consumer content nowadays.
     \begin{itemize}
-        \item Type: additive
+        \item Type: Additive
         \item Model: RGB
-        \item Definition: ISO IEC 61966-2-1 \parencite*{srgb2002} 
-        \item Encoding: most standards provide conversion formulae for the intended bit depth
+        \item Definition: ISO/IEC 61966-2-1 \parencite*{srgb2002}
+        \item Encoding: Most standards provide conversion formulae for the intended bit depth
               \begin{itemize}
                   \item this one is designed for \emph{8-bit unsigned integer}
               \end{itemize}
@@ -248,53 +248,53 @@
 \begin{frame}{Reasoning}
     \begin{center}
         Digital encoding of colour signals for transmission (TV, streaming, etc.)
-      \end{center}
-    
-      \uncover<+(1)->{What does it need to cover? \autocite{tooms}}
-      \begin{enumerate}[<+(1)->]
+    \end{center}
+
+    \uncover<+(1)->{What does it need to cover? \autocite{tooms}}
+    \begin{enumerate}[<+(1)->]
         % Tooms 14.2.1
         \item Retaining colour balance
               \begin{itemize}
-                \item colour drifts between different cameras? \emoji{pleading-face}
-                \item colour drifts between different screens? \emoji{pleading-face}
+                  \item colour drifts between different cameras? \emoji{pleading-face}
+                  \item colour drifts between different screens? \emoji{pleading-face}
               \end{itemize}
         \item Preserving the lightness information
               \begin{itemize}
-                \item our eyes are most sensitive to light, not colour itself
+                  \item our eyes are most sensitive to light, not colour itself
               \end{itemize}
         \item Efficiency of the colour signal(s)
               \begin{itemize}
-                \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
-                \item how much of this space/bandwidth is actually needed?
+                  \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
+                  \item how much of this space/bandwidth is actually needed?
               \end{itemize}
-      \end{enumerate}
+    \end{enumerate}
 \end{frame}
 \begin{frame}{Light? Colour?}
     Representing faithfully the response of the eye to light stimuli
 
     \begin{itemize}
         \item These spaces split colour information into two kinds of components:
-        \begin{enumerate}
-            \item Luma
-            \begin{itemize}
-                \item \emph{grayscale}, \emph{lightness}, etc.
-                \item Represents the luminosity information of the image
-            \end{itemize}
-            \item Chroma
-            \begin{itemize}
-                \item Represents the colours themselves
-            \end{itemize}
-        \end{enumerate}
+              \begin{enumerate}
+                  \item Luma
+                        \begin{itemize}
+                            \item \emph{grayscale}, \emph{lightness}, etc.
+                            \item Represents the luminosity information of the image
+                        \end{itemize}
+                  \item Chroma
+                        \begin{itemize}
+                            \item Represents the colours themselves
+                        \end{itemize}
+              \end{enumerate}
     \end{itemize}
 \end{frame}
-\begin{frame}{Light? Pitfall!}
-    Before going on, keep in mind \emph{gamma correction} \autocite{tooms}
+\begin{frame}{Luma? Luminance?}
+    Before going on, we need to keep in mind that image transmission involves \emph{gamma correction} \autocite{tooms}:
     \begin{itemize}
         \item Formally called:
-        \begin{enumerate}
-            \item \emph{opto-electric transfer function} (OETF) for the digitalization of the scene
-            \item \emph{electro-opto transfer function} (EOTF) for the display of the image
-        \end{enumerate}
+              \begin{enumerate}
+                  \item \emph{opto-electric transfer function} (OETF) for the digitalization of the scene
+                  \item \emph{electro-opto transfer function} (EOTF) for the display of the image
+              \end{enumerate}
         \item Accounts for the non-linearity on image sensors and display devices
     \end{itemize}
 \end{frame}
@@ -306,7 +306,7 @@
                 node distance=2em and 5em,
                 device/.style={align=center, font=\Large},
                 pcs/.style={circle, text width=3em, align=center, draw},
-                eotf/.style={->,shorten >=1pt,>=Latex,semithick,Orchid},
+                eotf/.style={->,shorten >=1pt,>=Latex,semithick,Red},
                 transform/.style={->,shorten >=1pt,>=Latex,semithick},
                 oetf/.style={->,shorten >=1pt,>=Latex,semithick,orange}
             ]
@@ -327,65 +327,83 @@
             \draw[oetf] (i3) -- (rgbi) node [midway, visible on=<2->] {\emoji{orange-circle}};
             \draw[transform] (rgbi) -- (pcs) node [midway, visible on=<3->] {\emoji{arrows-counterclockwise}};
             \draw[transform] (pcs) -- (rgbo) node [midway, visible on=<3->] {\emoji{arrows-counterclockwise}};
-            \draw[eotf] (rgbo) -- (o1) node [midway, visible on=<4->] {\emoji{purple-square}};
-            \draw[eotf] (rgbo) -- (o2) node [midway, visible on=<4->] {\emoji{purple-square}};
-            \draw[eotf] (rgbo) -- (o3) node [midway, visible on=<4->] {\emoji{purple-square}};
-            \draw[eotf] (rgbo) -- (o4) node [midway, visible on=<4->] {\emoji{purple-square}};
+            \draw[eotf] (rgbo) -- (o1) node [midway, visible on=<4->] {\emoji{red-square}};
+            \draw[eotf] (rgbo) -- (o2) node [midway, visible on=<4->] {\emoji{red-square}};
+            \draw[eotf] (rgbo) -- (o3) node [midway, visible on=<4->] {\emoji{red-square}};
+            \draw[eotf] (rgbo) -- (o4) node [midway, visible on=<4->] {\emoji{red-square}};
 
             \node [anchor=top, below=1em of pcs]{
                 \small
                 \begin{tblr}{colspec={cl}}%
-                    \emoji{orange-circle} & EOTF \\
-                    \emoji{arrows-counterclockwise} & CMS transform to/from PCS \\
-                    \emoji{purple-square} & OETF \\
+                    \onslide<2->{\emoji{orange-circle}}           & \onslide<2->{EOTF}                      \\
+                    \onslide<3->{\emoji{arrows-counterclockwise}} & \onslide<3->{CMS transform to/from PCS} \\
+                    \onslide<4->{\emoji{red-square}}              & \onslide<4->{OETF}                      \\
                 \end{tblr}
             };
         \end{tikzpicture}
     \end{figure}
 \end{frame}
-\begin{frame}{<title>}
-\begin{itemize}
-    \item This is the reason why preserving luminosity is so important -- an error here is very visible to our eyes
-    \item If the colour space works with gamma-corrected colour, you'll see a $'$ attached (usually) to the luma channel
+\begin{frame}{Luma/chroma v. luminance/chrominance}
     \begin{itemize}
-        \item it may also appear in the chroma channel, but it's implied anyway
-        \item e.g. $Y'CbCr$ (one of the spaces we'll cover later) consumes gamma-corrected RGB
-    \end{itemize}
-\end{itemize}
-\end{frame}
-\begin{frame}{What is YCbCr?}
-    \begin{center}
-        Device independent colour space encoding
-    \end{center}
-
-    \begin{itemize}[<+(1)->]
-        \item \emph{Device-independent:} its specification is fixed and does not depend on a particular device
-        \item \emph{Colour space:} it is a mathematical transformation of RGB
-        \item \emph{Encoding:} it specifies
+        \item \emph{Luma} and \emph{chroma} mean gamma-corrected channels
               \begin{itemize}
-                  \item the digital encoding method (8 or 10-bit unsigned integer, floating point)
-                  \item the encoding range (it depends for each of the options)
+                  \item $'$ attached to the variable name
+                  \item it's usually written in the luminosity channel only
+                  \item e.g. $Y'CbCr$ (one of the spaces we'll cover later) consumes gamma-corrected RGB
+              \end{itemize}
+        \item \emph{Luminance} and \emph{chrominance} mean linear (uncorrected) channels
+              \begin{itemize}
+                  \item eg. $YCbCr$ consumes linear RGB, and will result in washed colours if fed gamma-corrected RGB
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Why all this baggage?}
+    \begin{itemize}
+        \item Preserving colour balance is \emph{essential}
+        \item Errors in luma are very noticeable to the human eye
+        \item Errors in chroma? not so much
+        \item Codecs can drop spatial resolution \emph{and} lossily compress the colour data!
+              \begin{itemize}
+                  \item Less bandwidth/storage required
+                  \item Faster transmission rates
+                  \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
+                  \item but you can squeeze it to less than a MB!
+                  \item JPEG, H.264, HEVC, VP9, AV1... \emoji{clamp}\emoji{clamp}\emoji{clamp}
               \end{itemize}
     \end{itemize}
 \end{frame}
 \section{Examples}
-\begin{frame}{YIQ}
+\begin{frame}{How's a luma-chroma space defined?}
+    \begin{center}
+        \emph{Transformations} of existing colour spaces
+    \end{center}
+    \begin{itemize}
+        \item Base colour space
+        \item Transformation function
+              \begin{itemize}
+                  \item Usually (not always \emoji{wink}) a linear transformation of the source space
+              \end{itemize}
+        \item Transfer functions, where applicable
+    \end{itemize}
+\end{frame}
+\begin{frame}{Y'IQ}
     \begin{columns}<.->
         \begin{column}<.->{.7\textwidth}
             \begin{itemize}
-                \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
-                \item $Y$ is the \emph{luminance} signal
+                \item Created in 1953 for the NTSC analog broadcasting standard
+                \item The oldest luma-chroma space in the imaging field
+                \item ITU.R BT.470-6 \parencite*{BT470}, superseded by BT.1700-0 \parencite*{BT1700}
+                \item $(R', G', B')$ pixel $\rightarrow$ $(Y', I, Q)$ signal values
+                \item $Y'$ is the \emph{luma} signal
                       \begin{itemize}
                           \item Intuitively, our eyes are most sensitive to $G$
                           \item $G$ is a major contributor to the luminance value
                           \item $R$ and $B$ have smaller contributions
                       \end{itemize}
-                \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
+                \item $I$ and $Q$ together form the \emph{chroma} signal
                       \begin{itemize}
                           \item complementary \emph{colour difference} signals
-                          \item $Cb$ blue - luma, $Cr$ red - luma
                       \end{itemize}
-                \item Standardized by the ITU in two Recommendations
             \end{itemize}
         \end{column}
         \begin{column}<1->{.3\textwidth}
@@ -396,112 +414,50 @@
         \end{column}
     \end{columns}
 \end{frame}
-\begin{frame}{What does YCbCr do?}
-    \begin{columns}<.->
-        \begin{column}<.->{.7\textwidth}
-            \begin{itemize}
-                \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
-                \item $Y$ is the \emph{luminance} signal
-                      \begin{itemize}
-                          \item Intuitively, our eyes are most sensitive to $G$
-                          \item $G$ is a major contributor to the luminance value
-                          \item $R$ and $B$ have smaller contributions
-                      \end{itemize}
-                \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
-                      \begin{itemize}
-                          \item complementary \emph{colour difference} signals
-                          \item $Cb$ blue - luma, $Cr$ red - luma
-                      \end{itemize}
-                \item Standardized by the ITU in two Recommendations
-            \end{itemize}
-        \end{column}
-        \begin{column}<1->{.3\textwidth}
-            \begin{figure}
-                \includegraphics[height=10\baselineskip,keepaspectratio]{figures/Barns_grand_tetons_YCbCr_separation.jpg}
-                \caption*{Source: \href{https://commons.wikimedia.org/wiki/File:Barns_grand_tetons_YCbCr_separation.jpg}{Mike1024}, Public domain, via Wikimedia Commons}
-            \end{figure}
-        \end{column}
-    \end{columns}
-\end{frame}
-\begin{frame}{YCbCr: BT.601-7}
+\begin{frame}{Y'IQ: BT.1700-0}
     \begin{itemize}
-        \item Last updated in 2011 \autocite{BT601}
-        \item Targets standard definition transmissions ($\leq$480p)
-        \item Designed for compatibility with legacy receivers
-        \item Targets the \emph{D65} white point
+        \item Targets standard definition, analog transmissions
+        \item Targets a very old (CIE 1931) illuminant \emph{C}
+        \item However, quickly obsoleted with the invention of PAL
+        \item At the time, NTSC needed expensive circuitry to stabilize the signal
     \end{itemize}
 
     \uncover<+->{
         \begin{align}
-            Y' & = 0.299R' + 0.587G' + 0.114B'                                             \\
-            Cb & = \frac{0.701}{1.402}R' + \frac{-0.587}{1.402}G' + \frac{-0.114}{1.402}B' \\
-            Cr & = \frac{-0.299}{1.772}R' + \frac{-0.587}{1.772}G' + \frac{0.886}{1.772}B'
+            Y' & = 0.299R' + 0.587G' + 0.114B'  \\
+            I  & = 0.596R' - 0.275G' - 0.322 B' \\
+            Q  & = 0.211R' - 0.523G' + 0.312B'
         \end{align}
     }
 \end{frame}
-\begin{frame}{YCbCr: BT.709-6 version}
+\begin{frame}{Y'IQ: gamma correction}
     \begin{itemize}
-        \item Last updated in 2015 \autocite{BT709}
-        \item Revised version targeting HD and HDR transmissions
-        \item Drops legacy compatibility in exchange for accurate eye luminance response
-        \item Targets the \emph{D65} white point
-    \end{itemize}
-
-    \uncover<+->{
-        \begin{align}
-            Y' & = 0.2126R' + 0.7152G' + 0.0722B'                                                \\
-            Cb & = \frac{-0.2126}{1.8556}R' + \frac{-0.7152}{1.8556}G' + \frac{0.9278}{1.8556}B' \\
-            Cr & = \frac{0.7874}{1.5748}R' + \frac{-0.7152}{1.5748}G' + \frac{-0.0722}{1.5748}B'
-        \end{align}
-    }
-\end{frame}
-\begin{frame}{YCbCr: range}
-    \begin{itemize}
-        \item Intended for use in analog circuitry
-              \begin{itemize}
-                  \item e.g. 8-bit unsigned integer: $Y' \in [16, 235]$; $Cb, Cr \in [16, 240]$
-                  \item the extra room is to allow for the carrier signal to under/overshoot
-              \end{itemize}
-        \item Both matrices as well as the ICC standard expect data in floating point
-        \item \emoji{woman-raising-hand}: what is the range?
-        \item \emoji{woman-mage}: only BT.601 explains it (\S2.5.2)
-        \item $Y' \in [0, 1]$; $Cb, Cr \in [-0.5, 0.5]$
-    \end{itemize}
-\end{frame}
-\begin{frame}{YCbCr: gamma correction}
-    \begin{itemize}
-        \item YCbCr takes/returns a gamma-corrected RGB signal
-              \begin{itemize}
-                  \item the $'$ in $R'$ earlier denotes that correction
-              \end{itemize}
-        \item Formally called \emph{opto-electronic transfer function} (OETF)
-        \item Accounts for the non-linearity on the image sensor/display device
-        \item BT.601 and BT.709 specify the same relationship between luminance $L$ and electrical signal $E$: \begin{equation}
+        \item Y'IQ takes/returns a gamma-corrected RGB signal
+        \item The OETF relates the input luminance $L$ to the electrical signal $E$: \begin{equation}
+                  \small
                   E = \begin{cases}
                       (1.099L^{0.045} - 0.099) & 0.018 < L \leq 1.00 \\
                       4.500L                   & 0 \leq L \leq 0.018
                   \end{cases}
               \end{equation}
+        \item The EOTF relates the electrical signal $E$ to the output luminance $L$: \begin{equation}
+                  \small
+                  L = \begin{cases}
+                      \frac{E + 0.099}{1.099}^\frac{1}{0.4500} & 0.0812 < E \leq 1.00 \\
+                      \frac{E}{4.500}                          & 0 \leq L \leq 0.0812
+                  \end{cases}
+              \end{equation}
     \end{itemize}
 \end{frame}
-
-\begin{frame}{YDbDr}
+\begin{frame}{Y'DbDr}
     \begin{columns}<.->
         \begin{column}<.->{.7\textwidth}
             \begin{itemize}
-                \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
-                \item $Y$ is the \emph{luminance} signal
-                      \begin{itemize}
-                          \item Intuitively, our eyes are most sensitive to $G$
-                          \item $G$ is a major contributor to the luminance value
-                          \item $R$ and $B$ have smaller contributions
-                      \end{itemize}
-                \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
-                      \begin{itemize}
-                          \item complementary \emph{colour difference} signals
-                          \item $Cb$ blue - luma, $Cr$ red - luma
-                      \end{itemize}
-                \item Standardized by the ITU in two Recommendations
+                \item Entered use in France in 1967
+                \item Objective: fix NTSC's need for phase signal adjustment
+                \item $(R', G', B')$ pixel $\rightarrow$ $(Y', Db, Dr)$ signal values
+                \item $Y'$ is the \emph{luma} signal
+                \item $Db$ and $Dr$ together form the \emph{chroma} signal
             \end{itemize}
         \end{column}
         \begin{column}<1->{.3\textwidth}
@@ -512,22 +468,116 @@
         \end{column}
     \end{columns}
 \end{frame}
-\begin{frame}{YCgCo}
+\begin{frame}{Y'DbDr}
+    \begin{itemize}
+        \item Standardized in ITU.R BT-470.6 \parencite*{BT470}
+        \item Didn't make it to its upgrade, BT.1700-0 -- obsolete
+        \item Targets the \emph{D65} white point (beaten Y'CbCr!)
+        \item Targets the analog domain \emph{entirely} -- no OETF or EOTF
+        \item Assumes a power law $gamma = 2.2$ for the non-linearity of the display
+    \end{itemize}
+\end{frame}
+\begin{frame}{Y'CbCr}
     \begin{columns}<.->
         \begin{column}<.->{.7\textwidth}
             \begin{itemize}
-                \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
-                \item $Y$ is the \emph{luminance} signal
+                \item Created in 1981 as a joint EBU - SMPTE standard
+                \item Objective: entirely digital signal compositing pipeline
+                \item $(R', G', B')$ pixel $\rightarrow$ $(Y', Cb, Cr)$ signal values
+                \item $Y'$ is the \emph{luma} signal
+                \item $Cb$ and $Cr$ together form the \emph{chroma} signal
                       \begin{itemize}
-                          \item Intuitively, our eyes are most sensitive to $G$
-                          \item $G$ is a major contributor to the luminance value
-                          \item $R$ and $B$ have smaller contributions
-                      \end{itemize}
-                \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
-                      \begin{itemize}
-                          \item complementary \emph{colour difference} signals
                           \item $Cb$ blue - luma, $Cr$ red - luma
                       \end{itemize}
+                \item Standardized by the ITU in \emph{three} Recommendations
+                      \begin{itemize}
+                          \item it's the most widely used space in video!
+                      \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}<1->{.3\textwidth}
+            \begin{figure}
+                \includegraphics[height=10\baselineskip,keepaspectratio]{figures/Barns_grand_tetons_YCbCr_separation.jpg}
+                \caption*{Source: \href{https://commons.wikimedia.org/wiki/File:Barns_grand_tetons_YCbCr_separation.jpg}{Mike1024}, Public domain, via Wikimedia Commons}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame}{Y'CbCr: BT.601-7 (SD)}
+    \begin{itemize}
+        \item Last updated in 2011 \autocite{BT601}
+        \item Targets standard definition transmissions ($\leq$480p)
+        \item Designed for compatibility with legacy (monochrome, NTSC) receivers
+        \item Targets the \emph{D65} white point
+        \item Same gamma correction as Y'IQ
+    \end{itemize}
+
+    \uncover<+->{
+        \begin{align}
+            Y' & = 0.299R' + 0.587G' + 0.114B'                                             \\
+            Cb & = \frac{0.701}{1.402}R' + \frac{-0.587}{1.402}G' + \frac{-0.114}{1.402}B' \\
+            Cr & = \frac{-0.299}{1.772}R' + \frac{-0.587}{1.772}G' + \frac{0.886}{1.772}B'
+        \end{align}
+    }
+\end{frame}
+\begin{frame}{Y'CbCr: BT.709-6 (HD)}
+    \begin{itemize}
+        \item Last updated in 2015 \autocite{BT709}
+        \item Revised version targeting HD transmissions
+        \item Drops legacy compatibility in exchange for accurate eye luminance response
+        \item Targets the \emph{D65} white point
+        \item (Still) the same gamma correction as BT.601
+    \end{itemize}
+
+    \uncover<+->{
+        \begin{align}
+            Y' & = 0.2126R' + 0.7152G' + 0.0722B'                                                \\
+            Cb & = \frac{-0.2126}{1.8556}R' + \frac{-0.7152}{1.8556}G' + \frac{0.9278}{1.8556}B' \\
+            Cr & = \frac{0.7874}{1.5748}R' + \frac{-0.7152}{1.5748}G' + \frac{-0.0722}{1.5748}B'
+        \end{align}
+    }
+\end{frame}
+\begin{frame}{Y'CbCr: gamma correction in BT.2020}
+    \begin{itemize}
+        \item BT.2020 defines both corrected and uncorrected versions
+        \item For the sake of consistency, we cover the Y'CbCr version (gamma corrected) for 10-bit depth
+        \item The OETF relates the input luminance $L$ to the electrical signal $E$: \begin{equation}
+                  \small
+                  E = \begin{cases}
+                      (1.099L^{0.045} + 0.982) & 0.018 < L \leq 1.00 \\
+                      4.500L                   & 0 \leq L \leq 0.018
+                  \end{cases}
+              \end{equation}
+        \item The EOTF relates the electrical signal $E$ to the output luminance $L$: \begin{equation}
+                  \small
+                  L = \begin{cases}
+                      \frac{E + 0.099}{1.099}^\frac{1}{0.4500} & 0.0812 < E \leq 1.00 \\
+                      \frac{E}{4.500}                          & 0 \leq L \leq 0.0812
+                  \end{cases}
+              \end{equation}
+    \end{itemize}
+\end{frame}
+\begin{frame}{sYCC}
+    \begin{columns}<.->
+        \begin{column}<.->{.7\textwidth}
+            \begin{itemize}
+                \item Standardized in 1999 as part of sRGB \autocite{srgb2002}
+                \item Defines the colour space for JPEG's lossy compression step (DCT)
+                \item $(R', G', B')$ pixel $\rightarrow$ $(Y', Cb, Cr)$ pixel
+                \item Based on the sRGB primaries, \emph{not NTSC or BT.709}
+                \item Allows extended gamut (colours that don't fit within the sRGB gamut)
+            \end{itemize}
+        \end{column}
+        \begin{column}<1->{.3\textwidth}
+        \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame}{Y'CgCo}
+    \begin{columns}<.->
+        \begin{column}<.->{.7\textwidth}
+            \begin{itemize}
+                \item Standardized as ITU-R H.273 \parencite*{ycocg}
+                \item $(R', G', B')$ pixel $\rightarrow$ $(Y', Co, Cg)$ signal values
                 \item Standardized by the ITU in two Recommendations
             \end{itemize}
         \end{column}
