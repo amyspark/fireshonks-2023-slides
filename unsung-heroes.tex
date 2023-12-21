@@ -116,32 +116,42 @@
         \begin{column}<.->{.3\textwidth}
             \begin{figure}
                 \includegraphics[width=\columnwidth,keepaspectratio]{figures/bt709.pdf}
-                \caption*{The colour space of ITU-R BT.709. Source: \href{https://commons.wikimedia.org/wiki/File:CIExy1931_Rec_709.svg}{GrandDrake}, \href{http://creativecommons.org/licenses/by-sa/3.0/}{CC BY-SA 3.0}, via Wikimedia Commons}
+                \caption*{The colour space of ITU-R BT.709 \parencite*{BT709}. Source: \href{https://commons.wikimedia.org/wiki/File:CIExy1931_Rec_709.svg}{GrandDrake}, \href{http://creativecommons.org/licenses/by-sa/3.0/}{CC BY-SA 3.0}, via Wikimedia Commons}
             \end{figure}
         \end{column}
     \end{columns}
 \end{frame}
 \begin{frame}{How are colours stored and transmitted?}
-    It's essential to understand at which \enquote{stage} we're at:
+    From abstract to concrete:
     \begin{enumerate}
+        \item Colour model \emph{type}
         \item Colour \emph{model}
         \item Colour \emph{space}
         \item Colour \emph{encoding}
     \end{enumerate}
 \end{frame}
+\begin{frame}{Colour model types}
+    How they represent colours with their primaries \autocite{allen23}:
+    \begin{itemize}
+        \item \emph{Additive} colour models mix light stimuli to form colours
+              \begin{itemize}
+                  \item the most well known example is RGB
+                  \item three primaries: red, green, blue
+                  \item three coordinates: $(r, g, b)$ for each channel
+                  \item HSL, HSI, HSV are linear transformations of RGB and are used in web dev
+              \end{itemize}
+        \item \emph{Subtractive} colour models absorb light stimuli to form colours
+              \begin{itemize}
+                  \item the most well known example is CMYK (cyan, magenta, yellow, and black ink)
+              \end{itemize}
+    \end{itemize}
+\end{frame}
 \begin{frame}{Example: the sRGB colour space}
-    \emph{sRGB} ("standard RGB") powers most consumer content nowadays
+    \emph{sRGB} ("standard RGB") powers most consumer content nowadays.
     \begin{itemize}
         \item Type: additive
-              \begin{itemize}
-                  \item works by \emph{adding light} to represent colours
-                  \item there are \emph{subtractive} colour spaces too, not covered here
-              \end{itemize}
         \item Model: RGB
-              \begin{itemize}
-                  \item Three coordinates: $(r, g, b)$ for red, green, and blue
-              \end{itemize}
-        \item Definition: \href{https://www.evs.ee/en/evs-en-61966-2-1-2002}{ISO IEC 61966-2-1}
+        \item Definition: ISO IEC 61966-2-1 \parencite*{srgb2002} 
         \item Encoding: most standards provide conversion formulae for the intended bit depth
               \begin{itemize}
                   \item this one is designed for \emph{8-bit unsigned integer}
@@ -153,7 +163,7 @@
         \item In the analog era, there was a single colour space
               \begin{itemize}
                   \item Standardized in Recommendations from the International Telecommunications Union
-                  \item eg. ITU.R BT-709 \parencite{BT709} for digital SD TV content
+                  \item eg. ITU.R BT-709 \parencite*{BT709} for digital SD TV content
                   \item there were variations in broadcasting standards -- we'll cover these later
               \end{itemize}
         \item In the digital era, we need \emph{colour management systems}
@@ -164,10 +174,10 @@
         \item Modern colour management systems follow the International Colour Consortium's framework \autocite{allen}
         \item \emph{Open-loop} colour management
         \item Calculations are done in a \emph{profile connection space} (PCS)
-        \begin{itemize}
-            \item Intermediate, device-independent colour space
-            \item Primaries and illuminant are defined in this colour space
-        \end{itemize}
+              \begin{itemize}
+                  \item Intermediate, device-independent colour space
+                  \item Primaries and illuminant are defined in this colour space
+              \end{itemize}
         \item Conversions to/from each device $\equiv$ \emph{transformation} from/to the PCS
               \begin{itemize}
                   \item (note the inverted directions)
@@ -234,13 +244,115 @@
         \url{https://media.ccc.de/v/divoc_bb3-48292-the-last-frontier-on-icc-profiles}
     \end{center}
 \end{frame}
-\section{What are these spaces for?}
-\begin{frame}{}
-
+\section{What are these spaces?}
+\begin{frame}{Reasoning}
+    \begin{center}
+        Digital encoding of colour signals for transmission (TV, streaming, etc.)
+      \end{center}
     
-
+      \uncover<+(1)->{What does it need to cover? \autocite{tooms}}
+      \begin{enumerate}[<+(1)->]
+        % Tooms 14.2.1
+        \item Retaining colour balance
+              \begin{itemize}
+                \item colour drifts between different cameras? \emoji{pleading-face}
+                \item colour drifts between different screens? \emoji{pleading-face}
+              \end{itemize}
+        \item Preserving the lightness information
+              \begin{itemize}
+                \item our eyes are most sensitive to light, not colour itself
+              \end{itemize}
+        \item Efficiency of the colour signal(s)
+              \begin{itemize}
+                \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
+                \item how much of this space/bandwidth is actually needed?
+              \end{itemize}
+      \end{enumerate}
 \end{frame}
+\begin{frame}{Light? Colour?}
+    Representing faithfully the response of the eye to light stimuli
 
+    \begin{itemize}
+        \item These spaces split colour information into two kinds of components:
+        \begin{enumerate}
+            \item Luma
+            \begin{itemize}
+                \item \emph{grayscale}, \emph{lightness}, etc.
+                \item Represents the luminosity information of the image
+            \end{itemize}
+            \item Chroma
+            \begin{itemize}
+                \item Represents the colours themselves
+            \end{itemize}
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Light? Pitfall!}
+    Before going on, keep in mind \emph{gamma correction} \autocite{tooms}
+    \begin{itemize}
+        \item Formally called:
+        \begin{enumerate}
+            \item \emph{opto-electric transfer function} (OETF) for the digitalization of the scene
+            \item \emph{electro-opto transfer function} (EOTF) for the display of the image
+        \end{enumerate}
+        \item Accounts for the non-linearity on image sensors and display devices
+    \end{itemize}
+\end{frame}
+\begin{frame}{Gamma correction}
+    Let's assume that all devices handle the sRGB colour space:
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}[
+                node distance=2em and 5em,
+                device/.style={align=center, font=\Large},
+                pcs/.style={circle, text width=3em, align=center, draw},
+                eotf/.style={->,shorten >=1pt,>=Latex,semithick,Orchid},
+                transform/.style={->,shorten >=1pt,>=Latex,semithick},
+                oetf/.style={->,shorten >=1pt,>=Latex,semithick,orange}
+            ]
+            \node (i1) [device] {\emoji{camera}};
+            \node (i2) [device, below=of i1] {\emoji{video-camera}};
+            \node (i3) [device, below=of i2] {\emoji{movie-camera}};
+            \node (rgbi) [right=of i2]{RGB};
+            \node (pcs) [pcs, right=of rgbi] {PCS};
+            \node (rgbo) [right=of pcs] {RGB};
+            \node (o) [right=of rgbo] {};
+            \node (o1) [device, above=1em of o] {\emoji{mobile-phone}};
+            \node (o2) [device, above=of o1] {\emoji{desktop-computer}};
+            \node (o3) [device, below=1em of o] {\emoji{television}};
+            \node (o4) [device, below=of o3] {\emoji{dvd}};
+
+            \draw[oetf] (i1) -- (rgbi) node [midway, visible on=<2->] {\emoji{orange-circle}};
+            \draw[oetf] (i2) -- (rgbi) node [midway, visible on=<2->] {\emoji{orange-circle}};
+            \draw[oetf] (i3) -- (rgbi) node [midway, visible on=<2->] {\emoji{orange-circle}};
+            \draw[transform] (rgbi) -- (pcs) node [midway, visible on=<3->] {\emoji{arrows-counterclockwise}};
+            \draw[transform] (pcs) -- (rgbo) node [midway, visible on=<3->] {\emoji{arrows-counterclockwise}};
+            \draw[eotf] (rgbo) -- (o1) node [midway, visible on=<4->] {\emoji{purple-square}};
+            \draw[eotf] (rgbo) -- (o2) node [midway, visible on=<4->] {\emoji{purple-square}};
+            \draw[eotf] (rgbo) -- (o3) node [midway, visible on=<4->] {\emoji{purple-square}};
+            \draw[eotf] (rgbo) -- (o4) node [midway, visible on=<4->] {\emoji{purple-square}};
+
+            \node [anchor=top, below=1em of pcs]{
+                \small
+                \begin{tblr}{colspec={cl}}%
+                    \emoji{orange-circle} & EOTF \\
+                    \emoji{arrows-counterclockwise} & CMS transform to/from PCS \\
+                    \emoji{purple-square} & OETF \\
+                \end{tblr}
+            };
+        \end{tikzpicture}
+    \end{figure}
+\end{frame}
+\begin{frame}{<title>}
+\begin{itemize}
+    \item This is the reason why preserving luminosity is so important -- an error here is very visible to our eyes
+    \item If the colour space works with gamma-corrected colour, you'll see a $'$ attached (usually) to the luma channel
+    \begin{itemize}
+        \item it may also appear in the chroma channel, but it's implied anyway
+        \item e.g. $Y'CbCr$ (one of the spaces we'll cover later) consumes gamma-corrected RGB
+    \end{itemize}
+\end{itemize}
+\end{frame}
 \begin{frame}{What is YCbCr?}
     \begin{center}
         Device independent colour space encoding
@@ -257,28 +369,6 @@
     \end{itemize}
 \end{frame}
 \section{Examples}
-\begin{frame}{Reasoning}
-    \begin{center}
-        Digital encoding of colour signals for TV
-    \end{center}
-
-    \uncover<+(1)->{What does it need to cover? \autocite{tooms}}
-    \begin{enumerate}[<+(1)->]
-        % Tooms 14.2.1
-        \item Retaining colour balance
-              \begin{itemize}
-                  \item colour drifts between different cameras? \emoji{pleading-face}
-              \end{itemize}
-        \item Compatibility with monochrome (grayscale) systems
-              \begin{itemize}
-                  \item split the signal into \emph{luminance} and \emph{chromaticity} components
-              \end{itemize}
-        \item Efficiency of the colour signal(s)
-              \begin{itemize}
-                  \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
-              \end{itemize}
-    \end{enumerate}
-\end{frame}
 \begin{frame}{YIQ}
     \begin{columns}<.->
         \begin{column}<.->{.7\textwidth}
@@ -392,18 +482,6 @@
                       4.500L                   & 0 \leq L \leq 0.018
                   \end{cases}
               \end{equation}
-    \end{itemize}
-\end{frame}
-\begin{frame}{CRT-style gamma correction}
-    \begin{itemize}
-        \item There is little info on YCbCr's actual usage so let's consider an alternative
-        \item Old-school CRT television sets follow a \emph{power law}
-        \item The relationship between emitted light $L$ and driving voltage $V$:
-              \begin{equation}
-                  L = V^{\gamma}
-              \end{equation}
-        \item $\gamma$ depends on the device
-        \item The official recommendation, ITU-R BT.1886 \parencite*{BT1886} defaults to $\gamma = 2.4$
     \end{itemize}
 \end{frame}
 
@@ -529,5 +607,5 @@
 % https://tex.stackexchange.com/questions/30461/beamer-nonumber-equivalent-for-slides
 \begin{frame}[plain,noframenumbering,allowframebreaks]{\bibname}
     \printbibliography[heading=none]
-    \end{frame}
+\end{frame}
 \end{document}
