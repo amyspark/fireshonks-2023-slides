@@ -370,7 +370,16 @@
                   \item but you can squeeze it to less than a MB!
                   \item JPEG, H.264, HEVC, VP9, AV1... \emoji{clamp}\emoji{clamp}\emoji{clamp}
               \end{itemize}
+        \item The process is known as \emph{chroma subsampling}
     \end{itemize}
+\end{frame}
+\begin{frame}{Chroma subsampling}
+    \begin{figure}
+        \centering
+        \def\svgwidth{.6\textwidth}
+        \subimport{figures}{Common_chroma_subsampling_ratios.pdf_tex}
+        \caption*{Source: \href{https://commons.wikimedia.org/wiki/File:Common_chroma_subsampling_ratios.svg}{Stevo88}, Public Domain, via Wikipedia Commons}
+    \end{figure}
 \end{frame}
 \section{Examples}
 \begin{frame}{How's a luma-chroma space defined?}
@@ -505,7 +514,7 @@
 \end{frame}
 \begin{frame}{Y'CbCr: BT.601-7 (SD)}
     \begin{itemize}
-        \item Last updated in 2011 \autocite{BT601}
+        \item Last updated in \cite*{BT601}
         \item Targets standard definition transmissions ($\leq$480p)
         \item Designed for compatibility with legacy (monochrome, NTSC) receivers
         \item Targets the \emph{D65} white point
@@ -522,7 +531,7 @@
 \end{frame}
 \begin{frame}{Y'CbCr: BT.709-6 (HD)}
     \begin{itemize}
-        \item Last updated in 2015 \autocite{BT709}
+        \item Last updated in \cite*{BT709}
         \item Revised version targeting HD transmissions
         \item Drops legacy compatibility in exchange for accurate eye luminance response
         \item Targets the \emph{D65} white point
@@ -534,6 +543,22 @@
             Y' & = 0.2126R' + 0.7152G' + 0.0722B'                                                \\
             Cb & = \frac{-0.2126}{1.8556}R' + \frac{-0.7152}{1.8556}G' + \frac{0.9278}{1.8556}B' \\
             Cr & = \frac{0.7874}{1.5748}R' + \frac{-0.7152}{1.5748}G' + \frac{-0.0722}{1.5748}B'
+        \end{align}
+    }
+\end{frame}
+\begin{frame}{Y'CbCr: BT.2020-2 (4K/HDR)}
+    \begin{itemize}
+        \item Last updated in \cite*{BT2020}
+        \item Revised version targeting 4K and HDR
+        \item Upgraded transformation matrix and transform function
+        \item Maintains the \emph{D65} white point
+    \end{itemize}
+
+    \uncover<+->{
+        \begin{align}
+            Y' & = 0.2627R' + 0.6780G' + 0.0593B'                                                \\
+            Cb & = \frac{0.2627}{1.8814}R' + \frac{0.6780}{1.8814}G' + \frac{0.9407}{1.8814}B' \\
+            Cr & = \frac{0.7373}{1.4746}R' + \frac{0.6780}{1.4746}G' + \frac{0.0593}{1.4746}B'
         \end{align}
     }
 \end{frame}
@@ -572,13 +597,16 @@
         \end{column}
     \end{columns}
 \end{frame}
-\begin{frame}{Y'CgCo}
+\begin{frame}{YCgCo}
     \begin{columns}<.->
         \begin{column}<.->{.7\textwidth}
             \begin{itemize}
                 \item Standardized as ITU-R H.273 \parencite*{ycocg}
-                \item $(R', G', B')$ pixel $\rightarrow$ $(Y', Co, Cg)$ signal values
-                \item Standardized by the ITU in two Recommendations
+                \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cg, Co)$ signal values
+                      \begin{itemize}
+                          \item $Cg$ and $Co$ represent \enquote{orange} and \enquote{green} chroma
+                          \item \emph{Not "chrominance" as the Wikipedia page suggests!}
+                      \end{itemize}
             \end{itemize}
         \end{column}
         \begin{column}<1->{.3\textwidth}
@@ -590,23 +618,47 @@
     \end{columns}
 \end{frame}
 
+\begin{frame}{YCgCo}
+    \begin{itemize}
+        \item Standardized as ITU-R H.273 \parencite*{ycocg}
+        \item Standard provides a single point for all transfer functions you could use!
+        \item Designed for integer math -- $n+2$-bit depth is needed to preserve the full $n$-bit RGB range
+    \end{itemize}
+
+    \uncover<+->{
+        \begin{align}
+            \begin{bmatrix}
+                Y' \\
+                Cg \\
+                Co
+            \end{bmatrix} = \begin{bmatrix}
+                                \frac{1}{4}  & \frac{1}{2} & \frac{1}{4}  \\
+                                -\frac{1}{4} & \frac{1}{2} & -\frac{1}{4} \\
+                                \frac{1}{2}  & 0           & -\frac{1}{2}
+                            \end{bmatrix} \times \begin{bmatrix}
+                                                     R' \\
+                                                     G' \\
+                                                     B'
+                                                 \end{bmatrix}
+        \end{align}
+    }
+\end{frame}
 \begin{frame}{ICtCp}
     \begin{columns}<.->
         \begin{column}<.->{.7\textwidth}
             \begin{itemize}
-                \item $(R, G, B)$ pixel $\rightarrow$ $(Y, Cb, Cr)$ signal values
-                \item $Y$ is the \emph{luminance} signal
+                \item Designed by \textcite{ictcp}
+                \item $(R', G', B')$ pixel $\rightarrow$ $(I, Ct, Cp)$ signal values
                       \begin{itemize}
-                          \item Intuitively, our eyes are most sensitive to $G$
-                          \item $G$ is a major contributor to the luminance value
-                          \item $R$ and $B$ have smaller contributions
+                          \item Note: there's an optative linear RGB version
                       \end{itemize}
-                \item $Cb$ and $Cr$ together form the \emph{chrominance} signal
+                \item $I$ is the \emph{intensity} (luma) channel
+                \item $Ct$ and $Cp$ together form the \emph{chroma} channel
                       \begin{itemize}
-                          \item complementary \emph{colour difference} signals
-                          \item $Cb$ blue - luma, $Cr$ red - luma
+                          \item $Ct$ is \emph{chroma tritan} (yellow-blue)
+                          \item $Cp$ is \emph{chrome protan} (red-green)
                       \end{itemize}
-                \item Standardized by the ITU in two Recommendations
+                \item Standardized in ITU.R BT-2100 \parencite*{BT2100}
             \end{itemize}
         \end{column}
         \begin{column}<1->{.3\textwidth}
@@ -617,27 +669,35 @@
         \end{column}
     \end{columns}
 \end{frame}
+\begin{frame}{ICtCp}
+    \begin{itemize}
+        \item It is \emph{not} a linear transformation
+        \item Requires a complete CMS transformation pipeline
+        \item Also requires the BT.2100 transfer functions for HDR
+        \item $R'G'B' \xrightarrow{OETF} RGB \to LMS \to ICtCp$
+        \item Can't add more details, it'd turn this into a whole extra talk \emoji{sweat-smile}
+    \end{itemize}
+\end{frame}
 \section{Conclusions}
 \begin{frame}{Remarks}
     \begin{itemize}
-        \item Colour management is a complex beast
-        \item A \emph{seriously} complex beast!
-        \item We covered:
+        \item So many colour spaces
+        \item Originally designed for analog broadcasting
+        \item Now present in all everyday multimedia applications
+        \item We covered
               \begin{itemize}
-                  \item A primer on colour management
-                  \item The uniqueness of the YCbCr colour space
-                  \item How to turn a spec into a profile
+                  \item A primer on colour spaces
+                  \item The basics of colour managements
+                  \item Why are luma-chroma colour spaces so essential
+                  \item Examples
               \end{itemize}
     \end{itemize}
 \end{frame}
 \begin{frame}{Remarks}
     \begin{itemize}
-        \item We did not cover the actual implementation
+        \item We did not cover the full background behind colour spaces
+        \item We also did not cover what's needed for 4K/HDR
         \item That would make for another hour of talk!
-        \item The full, annotated profile generation code is available on GitHub
-              \begin{itemize}
-                  \item \faGithub~\href{https://github.com/amyspark/ycbcr-icc-profiles}{amyspark/ycbcr-icc-profiles}
-              \end{itemize}
         \item Extra references at the end of this talk's slides
     \end{itemize}
 \end{frame}
