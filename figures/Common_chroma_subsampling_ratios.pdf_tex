@@ -54,9 +54,9 @@
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{Common_chroma_subsampling_ratios.pdf}}%
-    \put(0.1082185667367788,0.6015776087463756){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Y\end{tabular}}}}%
-    \put(0.3744250733191857,0.6015776087463756){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}U+V\end{tabular}}}}%
-    \put(0.6723391675105168,0.6015776967778509){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}YUV\end{tabular}}}}%
+    \put(0.1082185667367788,0.6015776087463756){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Luma\end{tabular}}}}%
+    \put(0.3744250733191857,0.6015776087463756){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Chroma\end{tabular}}}}%
+    \put(0.6723391675105168,0.6015776967778509){\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Luma-chroma\end{tabular}}}}%
     \put(0.8463021567307693,0.5067694777484977){\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}4:4:4\end{tabular}}}}%
     \put(0.8463021567307693,0.3528331796715746){\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}4:2:2\end{tabular}}}}%
     \put(0.8463021567307693,0.1993626267869592){\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}4:2:0\end{tabular}}}}%

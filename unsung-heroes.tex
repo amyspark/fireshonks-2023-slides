@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%
 
 \setdefaultlanguage{english}
-\setotherlanguage[variant=austrian]{german}
+\setotherlanguage{german}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, matrix, shapes.geometric, overlay-beamer-styles}
 \usepackage[german]{datetime2}
@@ -74,7 +74,7 @@
         \item How can we watch \emoji{cat} videos on phones?
         \item How were we able to watch colour TV before the PC era?
         \item \emoji{woman-mage} there's a \emph{luma-chroma colour space} involved to compress them!
-        \item Lots of background to cover, includes HDR too!
+        \item Lots of background to cover, includes a bit of HDR too!
     \end{itemize}
 \end{frame}
 \begin{frame}{Scope}
@@ -85,10 +85,10 @@
     Colours are specified as coordinates in a \emph{colour space}.
     \begin{itemize}[<+(1)->]
         \item $n$-dimensional geometrical model
-        \item light stimuli (colours) $\leftrightarrow$ vector coordinates
+        \item Light stimuli (colours) $\leftrightarrow$ vector coordinates
         \item If you've taken a picture, or browsed the web, you've run across them
               \begin{itemize}
-                  \item the sRGB colour space powers most consumer content nowadays
+                  \item The sRGB colour space powers most consumer content nowadays
               \end{itemize}
     \end{itemize}
 \end{frame}
@@ -135,14 +135,14 @@
     \begin{itemize}
         \item \emph{Additive} colour models mix light stimuli to form colours
               \begin{itemize}
-                  \item the most well known example is RGB
-                  \item three primaries: red, green, blue
-                  \item three coordinates: $(r, g, b)$ for each channel
+                  \item The most well known example is RGB
+                  \item Three primaries: red, green, blue
+                  \item Three coordinates: $(r, g, b)$ for each channel
                   \item HSL, HSI, HSV are linear transformations of RGB and are used in web dev
               \end{itemize}
         \item \emph{Subtractive} colour models absorb light stimuli to form colours
               \begin{itemize}
-                  \item the most well known example is CMYK (cyan, magenta, yellow, and black ink)
+                  \item The most well known example is CMYK (cyan, magenta, yellow, and black ink)
               \end{itemize}
     \end{itemize}
 \end{frame}
@@ -154,7 +154,7 @@
         \item Definition: ISO/IEC 61966-2-1 \parencite*{srgb2002}
         \item Encoding: Most standards provide conversion formulae for the intended bit depth
               \begin{itemize}
-                  \item this one is designed for \emph{8-bit unsigned integer}
+                  \item This one is designed for \emph{8-bit unsigned integer}
               \end{itemize}
     \end{itemize}
 \end{frame}
@@ -163,8 +163,8 @@
         \item In the analog era, there was a single colour space
               \begin{itemize}
                   \item Standardized in Recommendations from the International Telecommunications Union
-                  \item eg. ITU.R BT-709 \parencite*{BT709} for digital SD TV content
-                  \item there were variations in broadcasting standards -- we'll cover these later
+                  \item e.g. ITU.R BT-709 \parencite*{BT709} for digital SD TV content
+                  \item There were variations in broadcasting standards -- we'll cover these later
               \end{itemize}
         \item In the digital era, we need \emph{colour management systems}
     \end{itemize}
@@ -255,17 +255,17 @@
         % Tooms 14.2.1
         \item Retaining colour balance
               \begin{itemize}
-                  \item colour drifts between different cameras? \emoji{pleading-face}
-                  \item colour drifts between different screens? \emoji{pleading-face}
+                  \item Colour drifts between different cameras? \emoji{pleading-face}
+                  \item Colour drifts between different screens? \emoji{pleading-face}
               \end{itemize}
         \item Preserving the lightness information
               \begin{itemize}
-                  \item our eyes are most sensitive to light, not colour itself
+                  \item Our eyes are most sensitive to light, not colour itself
               \end{itemize}
         \item Efficiency of the colour signal(s)
               \begin{itemize}
                   \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
-                  \item how much of this space/bandwidth is actually needed?
+                  \item How much of this space/bandwidth is actually needed?
               \end{itemize}
     \end{enumerate}
 \end{frame}
@@ -277,7 +277,7 @@
               \begin{enumerate}
                   \item Luma
                         \begin{itemize}
-                            \item \emph{grayscale}, \emph{lightness}, etc.
+                            \item \emph{Grayscale}, \emph{lightness}, etc.
                             \item Represents the luminosity information of the image
                         \end{itemize}
                   \item Chroma
@@ -288,12 +288,12 @@
     \end{itemize}
 \end{frame}
 \begin{frame}{Luma? Luminance?}
-    Before going on, we need to keep in mind that image transmission involves \emph{gamma correction} \autocite{tooms}:
+    Before going on, we need to keep in mind that image transmission involves \emph{gamma correction} \autocite{tooms}.
     \begin{itemize}
         \item Formally called:
               \begin{enumerate}
-                  \item \emph{opto-electric transfer function} (OETF) for the digitalization of the scene
-                  \item \emph{electro-opto transfer function} (EOTF) for the display of the image
+                  \item \emph{Opto-electric transfer function} (OETF) for the digitalization of the scene
+                  \item \emph{Electro-opto transfer function} (EOTF) for the display of the image
               \end{enumerate}
         \item Accounts for the non-linearity on image sensors and display devices
     \end{itemize}
@@ -348,12 +348,12 @@
         \item \emph{Luma} and \emph{chroma} mean gamma-corrected channels
               \begin{itemize}
                   \item $'$ attached to the variable name
-                  \item it's usually written in the luminosity channel only
+                  \item It's usually written in the luminosity channel only
                   \item e.g. $Y'CbCr$ (one of the spaces we'll cover later) consumes gamma-corrected RGB
               \end{itemize}
         \item \emph{Luminance} and \emph{chrominance} mean linear (uncorrected) channels
               \begin{itemize}
-                  \item eg. $YCbCr$ consumes linear RGB, and will result in washed colours if fed gamma-corrected RGB
+                  \item e.g. $YCbCr$ consumes linear RGB, and will result in washed colours if fed gamma-corrected RGB
               \end{itemize}
     \end{itemize}
 \end{frame}
@@ -367,7 +367,7 @@
                   \item Less bandwidth/storage required
                   \item Faster transmission rates
                   \item e.g. a single 1080p frame, 8-bit RGB uncompressed, is \SI{170}{\mega\byte}
-                  \item but you can squeeze it to less than a MB!
+                  \item But you can squeeze it to less than a MB!
                   \item JPEG, H.264, HEVC, VP9, AV1... \emoji{clamp}\emoji{clamp}\emoji{clamp}
               \end{itemize}
         \item The process is known as \emph{chroma subsampling}
@@ -411,7 +411,7 @@
                       \end{itemize}
                 \item $I$ and $Q$ together form the \emph{chroma} signal
                       \begin{itemize}
-                          \item complementary \emph{colour difference} signals
+                          \item Complementary \emph{colour difference} signals
                       \end{itemize}
             \end{itemize}
         \end{column}
@@ -498,10 +498,8 @@
                       \begin{itemize}
                           \item $Cb$ blue - luma, $Cr$ red - luma
                       \end{itemize}
+                \item Key property: less than \qty{25}{\percent} of the colour space relates to valid RGB colours! \autocite{7261497}
                 \item Standardized by the ITU in \emph{three} Recommendations
-                      \begin{itemize}
-                          \item it's the most widely used space in video!
-                      \end{itemize}
             \end{itemize}
         \end{column}
         \begin{column}<1->{.3\textwidth}
@@ -696,7 +694,13 @@
 \begin{frame}{Remarks}
     \begin{itemize}
         \item We did not cover the full background behind colour spaces
+        \begin{itemize}
+            \item Trichromacy, $LMS$ cone response functions
+        \end{itemize}
         \item We also did not cover what's needed for 4K/HDR
+        \begin{itemize}
+            \item YCbCr v ICtCp in digital workflows
+        \end{itemize}
         \item That would make for another hour of talk!
         \item Extra references at the end of this talk's slides
     \end{itemize}
@@ -707,11 +711,12 @@
             \large
             \textbf{Got any questions or comments?}
         }
-        \begin{itemize}[<*>]
-            \item Q+A next
-            \item Email: \href{mailto:amy@amyspark.me?subject="FireShonks 2023"}{amy@amyspark.me}
-            \item Matrix: \href{https://matrix.to/\#/@amyspark:fairydust.space}{@amyspark:fairydust.space}
-        \end{itemize}
+
+        Q+A next
+
+        Email: \href{mailto:amy@amyspark.me?subject="FireShonks 2023"}{amy@amyspark.me}
+
+        Matrix: \href{https://matrix.to/\#/@amyspark:fairydust.space}{@amyspark:fairydust.space}
     \end{center}
 \end{frame}
 % https://tex.stackexchange.com/questions/30461/beamer-nonumber-equivalent-for-slides
